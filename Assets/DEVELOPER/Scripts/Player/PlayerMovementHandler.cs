@@ -1,3 +1,4 @@
+using EssentialManagers.Scripts.Managers;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,6 +18,7 @@ namespace DEVELOPER.Scripts.Player
             agent = GetComponent<NavMeshAgent>();
             agent.updateRotation = false;
             agent.updateUpAxis = false;
+            joystick = CanvasManager.instance.GetDynamicJoystick();
         }
 
         void Update()

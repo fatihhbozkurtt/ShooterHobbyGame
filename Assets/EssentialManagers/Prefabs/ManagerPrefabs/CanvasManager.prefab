@@ -1637,6 +1637,7 @@ MonoBehaviour:
   failCanvasGroup: {fileID: 2825564356733637125}
   screenFader: {fileID: 7533348499011124763}
   levelText: {fileID: 3719354001359010214}
+  dynamicJoystick: {fileID: 7244437400932623359}
 --- !u!1 &8835907475176467635
 GameObject:
   m_ObjectHideFlags: 0
@@ -1959,6 +1960,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8135886326569738822, guid: 56fae09712773584fb63896d473a98ee, type: 3}
   m_PrefabInstance: {fileID: 1468473563123089848}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7244437400932623359 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8135886326569738823, guid: 56fae09712773584fb63896d473a98ee, type: 3}
+  m_PrefabInstance: {fileID: 1468473563123089848}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba0d0e7a039f526499c356a3c5cd6d3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2153797017334947409
 PrefabInstance:
   m_ObjectHideFlags: 0

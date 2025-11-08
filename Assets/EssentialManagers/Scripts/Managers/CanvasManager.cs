@@ -22,6 +22,7 @@ namespace EssentialManagers.Scripts.Managers
 
         [Header("Standard Objects")] public Image screenFader;
         public TextMeshProUGUI levelText;
+        [SerializeField] DynamicJoystick dynamicJoystick;
 
         CanvasGroup[] canvasArray;
 
@@ -93,6 +94,7 @@ namespace EssentialManagers.Scripts.Managers
             }
         }
 
+        public DynamicJoystick GetDynamicJoystick() => dynamicJoystick;
         #region ButtonEvents
 
         public void OnTapRestart()
