@@ -7,9 +7,9 @@ namespace DEVELOPER.Scripts.SO
     {
         public string weaponName;
         public GameObject bulletPrefab;
-        public float damage = 1f;
+        public int damage = 1;
         public float fireRate = 0.2f;
-        public float reloadTime = 1.5f;
+        public float reloadTime = 2f;
         public float bulletSpeed = 20f;
         public int magazineSize = 10;
     }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DEVELOPER.Scripts.Controllers;
@@ -6,6 +8,7 @@ using DEVELOPER.Scripts.SO;
 using EssentialManagers.Scripts.Managers;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 namespace DEVELOPER.Scripts.Managers
 {
@@ -17,6 +20,7 @@ namespace DEVELOPER.Scripts.Managers
         private GameplayDataSO _gameplayDataSo;
         private CancellationTokenSource waveCTS;
         private Transform _target;
+        private List<EnemyAI> _spawnedEnemies = new();
 
 
         protected override void Awake()
@@ -40,10 +44,12 @@ namespace DEVELOPER.Scripts.Managers
 
         private async UniTaskVoid StartWaveLoopAsync(CancellationToken token)
         {
+            await UniTask.Delay(TimeSpan.FromSeconds(2), cancellationToken: token);
+
             while (!token.IsCancellationRequested)
             {
                 await SpawnWaveAsync(token);
-                await UniTask.Delay(System.TimeSpan.FromSeconds(enemySpawnData.waveInterval), cancellationToken: token);
+                await UniTask.Delay(TimeSpan.FromSeconds(enemySpawnData.waveInterval), cancellationToken: token);
             }
         }
 
@@ -63,7 +69,9 @@ namespace DEVELOPER.Scripts.Managers
                 var ai = enemy.GetComponent<EnemyAI>();
                 ai.Initialize(_target, _gameplayDataSo.enemyPrefab.gameObject);
 
-                await UniTask.Delay(System.TimeSpan.FromSeconds(enemySpawnData.spawnInterval),
+                AddEnemy(ai);
+
+                await UniTask.Delay(TimeSpan.FromSeconds(enemySpawnData.spawnInterval),
                     cancellationToken: token);
             }
         }
@@ -85,5 +93,15 @@ namespace DEVELOPER.Scripts.Managers
 
             return Vector3.zero;
         }
+
+        public List<EnemyAI> GetSpawnedEnemies() => _spawnedEnemies;
+
+        private void AddEnemy(EnemyAI ai)
+        {
+            if (ai != null && !_spawnedEnemies.Contains(ai))
+                _spawnedEnemies.Add(ai);
+        }
+
+        public void RemoveEnemy(EnemyAI enemy) => _spawnedEnemies.Remove(enemy);
     }
 }

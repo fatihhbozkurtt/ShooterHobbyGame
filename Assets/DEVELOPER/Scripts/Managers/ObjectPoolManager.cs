@@ -16,15 +16,46 @@ namespace DEVELOPER.Scripts.Managers
         [Header("Pool Settings")] [SerializeField]
         private int defaultPrewarmCount = 5;
 
-        [SerializeField] private int defaultMaxPoolSize = 50;
+        [SerializeField] private int defaultMaxPoolSize = 150;
+
+        [Header("Prewarm Prefabs")] [SerializeField]
+        private List<GameObject> prewarmPrefabs;
+
+        [Header("Custom Max Sizes")] [SerializeField]
+        private List<PoolLimitEntry> customLimits;
 
         private Dictionary<GameObject, Queue<GameObject>> poolDict = new();
         private Dictionary<GameObject, int> poolSizes = new();
+        private Dictionary<GameObject, int> maxSizeDict = new();
+
+
+        protected override void Awake()
+        {
+            base.Awake();
+            foreach (var entry in customLimits)
+            {
+                if (entry.prefab != null)
+                    maxSizeDict[entry.prefab] = entry.maxSize;
+            }
+
+            PrewarmAll();
+        }
+
+        /// <summary>
+        /// Prewarms all configured prefabs at startup.
+        /// </summary>
+        private void PrewarmAll()
+        {
+            foreach (var prefab in prewarmPrefabs)
+            {
+                Prewarm(prefab, defaultPrewarmCount, transform);
+            }
+        }
 
         /// <summary>
         /// Prewarms the pool by instantiating a number of inactive objects upfront.
         /// </summary>
-        public void Prewarm(GameObject prefab, int count, Transform parent)
+        private void Prewarm(GameObject prefab, int count, Transform parent)
         {
             if (!poolDict.ContainsKey(prefab))
                 poolDict[prefab] = new Queue<GameObject>();
@@ -38,6 +69,7 @@ namespace DEVELOPER.Scripts.Managers
 
             poolSizes[prefab] = count;
         }
+
 
         /// <summary>
         /// Retrieves an object from the pool or instantiates a new one if the pool is empty.
@@ -58,9 +90,11 @@ namespace DEVELOPER.Scripts.Managers
             else
             {
                 poolSizes.TryAdd(prefab, 0);
-                if (poolSizes[prefab] >= defaultMaxPoolSize)
+                int maxSize = maxSizeDict.ContainsKey(prefab) ? maxSizeDict[prefab] : defaultMaxPoolSize;
+
+                if (poolSizes[prefab] >= maxSize)
                 {
-                    Debug.LogWarning($"Pool for {prefab.name} exceeded max size.");
+                    Debug.LogWarning($"Pool for {prefab.name} exceeded max size ({maxSize}).");
                     return null;
                 }
 
@@ -77,6 +111,7 @@ namespace DEVELOPER.Scripts.Managers
 
             return obj;
         }
+
 
         /// <summary>
         /// Returns an object to the pool and optionally triggers its despawn logic.

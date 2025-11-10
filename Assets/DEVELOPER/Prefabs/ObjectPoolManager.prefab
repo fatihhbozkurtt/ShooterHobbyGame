@@ -44,3 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0477c680003a461b86be4cabc99f8ca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultPrewarmCount: 100
+  defaultMaxPoolSize: 150
+  prewarmPrefabs:
+  - {fileID: 7594236425349259694, guid: e3ab596a719dd4e44b6c2e6102d7ea6d, type: 3}
+  - {fileID: 2430943188299644367, guid: 4718360b2d4c629418805c73c3a00d94, type: 3}
+  customLimits:
+  - prefab: {fileID: 7594236425349259694, guid: e3ab596a719dd4e44b6c2e6102d7ea6d, type: 3}
+    maxSize: 200
+  - prefab: {fileID: 2430943188299644367, guid: 4718360b2d4c629418805c73c3a00d94, type: 3}
+    maxSize: 150

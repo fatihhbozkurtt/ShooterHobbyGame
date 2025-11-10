@@ -2,29 +2,65 @@ using DEVELOPER.Scripts.Data;
 using DEVELOPER.Scripts.Managers;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+namespace DEVELOPER.Scripts.Controllers
 {
-    private float damage;
-    private float speed;
-
-    public void Initialize(float damageAmount, float bulletSpeed)
+    public class Bullet : MonoBehaviour, IPoolable
     {
-        damage = damageAmount;
-        speed = bulletSpeed;
-    }
+        private GameObject _prefabRef;
+        private int _damage;
+        private float _speed;
+        private Vector3 _direction;
+        private float _lifetime;
 
-    private void Update()
-    {
-        transform.Translate(Vector3.forward * (speed * Time.deltaTime));
-    }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent<IDamageable>(out var damageable))
+        public void Initialize(int damage, float speed)
         {
-            damageable.TakeDamage(Mathf.RoundToInt(damage));
+            _prefabRef = DataExtensions.GetGameplayData().bulletPrefab.gameObject;
+            _damage = damage;
+            _speed = speed; 
+
+            Transform target = transform.position.GetClosestEnemy(EnemySpawner.instance.GetSpawnedEnemies());
+            _direction = target != null
+                ? (target.position - transform.position).normalized
+                : transform.forward;
+
+            _lifetime = 0f;
         }
 
-        ObjectPoolManager.instance.ReturnToPool(gameObject, gameObject);
+        private void Update()
+        {
+            if (!gameObject.activeInHierarchy) return;
+
+            transform.position += _direction * (_speed * Time.deltaTime);
+            _lifetime += Time.deltaTime;
+
+            if (_lifetime >= 5f)
+            {
+                ObjectPoolManager.instance.ReturnToPool(_prefabRef, gameObject);
+            }
+        }
+
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent<IDamageable>(out var damageable))
+            {
+                damageable.TakeDamage(_damage);
+                ObjectPoolManager.instance.ReturnToPool(_prefabRef, gameObject);
+            }
+        }
+
+
+        public void OnSpawn()
+        {
+            _lifetime = 0f;
+            gameObject.SetActive(true);
+        }
+
+        public void OnDespawn()
+        {
+            // Optional: reset velocity, trail, etc.
+            gameObject.SetActive(false);
+        }
     }
 }

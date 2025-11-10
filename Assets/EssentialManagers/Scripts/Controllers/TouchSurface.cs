@@ -1,16 +1,18 @@
-using EssentialManagers.Scripts.Managers;
-using UnityEngine.EventSystems;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class TouchSurface : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+namespace EssentialManagers.Scripts.Controllers
 {
-    public void OnPointerDown(PointerEventData _)
+    public class TouchSurface : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
-        InputManager.instance.OnPointerDown();
-    }
+        public void OnPointerDown(PointerEventData _)
+        {
+         
+        }
 
-    public void OnPointerUp(PointerEventData _)
-    {
-        InputManager.instance.OnPointerUp();
+        public void OnPointerUp(PointerEventData _)
+        {
+        
+        }
     }
 }

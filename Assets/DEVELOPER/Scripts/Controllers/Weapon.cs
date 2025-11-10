@@ -1,6 +1,8 @@
+using Cysharp.Threading.Tasks;
 using DEVELOPER.Scripts.Data;
 using DEVELOPER.Scripts.Managers;
 using DEVELOPER.Scripts.SO;
+using EssentialManagers.Scripts.Managers;
 using UnityEngine;
 
 namespace DEVELOPER.Scripts.Controllers
@@ -11,32 +13,56 @@ namespace DEVELOPER.Scripts.Controllers
         private Transform firePoint;
 
         [Header("Debug")] [SerializeField] private WeaponDataSo weaponDataSo;
-        private float lastFireTime;
+
         private int currentAmmo;
+        private bool isFiring;
+        private bool isReloading;
+
+        private InputManager _inputManager;
 
         public void Initialize(WeaponDataSo data)
         {
+            _inputManager = InputManager.instance;
             weaponDataSo = data;
             currentAmmo = weaponDataSo.magazineSize;
         }
 
         private void Update()
         {
-            if (Input.GetButton("Fire1") && Time.time >= lastFireTime + weaponDataSo.fireRate)
+            if (_inputManager.IsFiring && !isFiring && !isReloading)
             {
-                Fire();
+                isFiring = true;
+                FireLoopAsync().Forget();
+            }
+
+            if (!_inputManager.IsFiring && isFiring)
+            {
+                isFiring = false;
+            }
+        }
+
+        private async UniTaskVoid FireLoopAsync()
+        {
+            while (isFiring)
+            {
+                if (currentAmmo > 0)
+                {
+                    Fire();
+                    await UniTask.Delay((int)(weaponDataSo.fireRate * 1000));
+                }
+                else
+                {
+                    await ReloadAsync();
+                    isFiring = false;
+                }
+
+                await UniTask.Yield();
             }
         }
 
         private void Fire()
         {
-            if (currentAmmo <= 0)
-            {
-                // TODO: Trigger reload animation
-                return;
-            }
-
-            GameObject bullet = ObjectPoolManager.instance.GetFromPool(weaponDataSo.bulletPrefab, transform);
+            GameObject bullet = ObjectPoolManager.instance.GetFromPool(weaponDataSo.bulletPrefab, null);
             bullet.transform.position = firePoint.position;
             bullet.transform.rotation = firePoint.rotation;
 
@@ -44,10 +70,17 @@ namespace DEVELOPER.Scripts.Controllers
             bulletScript.Initialize(weaponDataSo.damage, weaponDataSo.bulletSpeed);
 
             currentAmmo--;
-            lastFireTime = Time.time;
         }
 
+        private async UniTask ReloadAsync()
+        {
+            isReloading = true;
 
-      
+            // TODO: Trigger reload animation or sound
+            await UniTask.Delay((int)(weaponDataSo.reloadTime * 1000));
+
+            currentAmmo = weaponDataSo.magazineSize;
+            isReloading = false;
+        }
     }
 }

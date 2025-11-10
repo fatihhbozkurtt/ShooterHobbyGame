@@ -8,7 +8,7 @@ namespace DEVELOPER.Scripts.Controllers
 {
     public class EnemyAI : MonoBehaviour, IDamageable, IPoolable
     {
-        [SerializeField] private int health = 3;
+        [Header("Debug")] [SerializeField] private int currentHealth;
 
         private NavMeshAgent agent;
         private Transform target;
@@ -46,8 +46,8 @@ namespace DEVELOPER.Scripts.Controllers
 
         public void TakeDamage(int amount)
         {
-            health -= amount;
-            if (health <= 0)
+            currentHealth -= amount;
+            if (currentHealth <= 0)
             {
                 Die();
             }
@@ -72,6 +72,7 @@ namespace DEVELOPER.Scripts.Controllers
         public void OnDespawn()
         {
             gameObject.SetActive(false);
+            EnemySpawner.instance.RemoveEnemy(this);
             JobsLogicManager.instance?.Unregister(this);
         }
 
