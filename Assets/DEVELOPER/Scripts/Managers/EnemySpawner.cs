@@ -21,60 +21,98 @@ namespace DEVELOPER.Scripts.Managers
         private CancellationTokenSource waveCTS;
         private Transform _target;
         private List<EnemyAI> _spawnedEnemies = new();
+        LevelData _levelData;
 
 
-        protected override void Awake()
+        private void Start()
         {
-            base.Awake();
-            _gameplayDataSo = DataExtensions.GetGameplayData();
-            enemySpawnData = _gameplayDataSo.enemySpawnConfig;
+            _levelData = GameManager.instance.GetGeneralLevelData();
+            _gameplayDataSo = _levelData.GameplayData;
+            enemySpawnData = _gameplayDataSo.EnemySpawnConfig;
+
+            TimerManager.instance.OnTimerEnd += StopSpawning;
+            GameManager.instance.LevelEndedEvent += StopSpawning;
         }
 
-        public void SetTargetAndStartWaveLoop(Transform targetTransform)
+        public void SetTarget(Transform targetTransform)
         {
             _target = targetTransform;
             waveCTS = new CancellationTokenSource();
+
             StartWaveLoopAsync(waveCTS.Token).Forget();
         }
 
-        public void StopSpawning()
+        private void StopSpawning()
         {
             waveCTS?.Cancel();
+            waveCTS?.Dispose();
+            waveCTS = null;
         }
 
         private async UniTaskVoid StartWaveLoopAsync(CancellationToken token)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(2), cancellationToken: token);
-
-            while (!token.IsCancellationRequested)
+            if (_target == null)
             {
-                await SpawnWaveAsync(token);
-                await UniTask.Delay(TimeSpan.FromSeconds(enemySpawnData.waveInterval), cancellationToken: token);
+                Debug.LogError("No target assigned");
+                return;
+            }
+
+            try
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(2), cancellationToken: token);
+
+                while (!token.IsCancellationRequested)
+                {
+                    await SpawnWaveAsync(token);
+                    await UniTask.Delay(TimeSpan.FromSeconds(enemySpawnData.waveInterval), cancellationToken: token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log("Wave spawning cancelled.");
             }
         }
+
 
         private async UniTask SpawnWaveAsync(CancellationToken token)
         {
-            for (int i = 0; i < enemySpawnData.enemiesPerWave; i++)
+            try
             {
-                if (token.IsCancellationRequested) return;
+                for (int i = 0; i < enemySpawnData.enemiesPerWave; i++)
+                {
+                    token.ThrowIfCancellationRequested();
 
-                Vector3 spawnPosition = GetValidSpawnPosition();
-                if (spawnPosition == Vector3.zero) continue;
+                    if (_target == null)
+                    {
+                        Debug.LogWarning("SpawnWaveAsync aborted mid-loop: target is null.");
+                        return;
+                    }
 
-                GameObject enemy =
-                    ObjectPoolManager.instance.GetFromPool(_gameplayDataSo.enemyPrefab.gameObject, transform);
-                enemy.transform.position = spawnPosition;
+                    Vector3 spawnPosition = GetValidSpawnPosition();
+                    spawnPosition.y = 1.6f;
 
-                var ai = enemy.GetComponent<EnemyAI>();
-                ai.Initialize(_target, _gameplayDataSo.enemyPrefab.gameObject);
+                    if (spawnPosition == Vector3.zero) continue;
 
-                AddEnemy(ai);
+                    GameObject enemy =
+                        ObjectPoolManager.instance.GetFromPool(_gameplayDataSo.enemyPrefab.gameObject, transform);
+                    enemy.transform.position = spawnPosition;
 
-                await UniTask.Delay(TimeSpan.FromSeconds(enemySpawnData.spawnInterval),
-                    cancellationToken: token);
+                    var ai = enemy.GetComponent<EnemyAI>();
+                    if (ai == null) continue;
+
+                    EnemyType type = DataExtensions.GetEnemyTypeByTime();
+                    ai.Initialize(_target, _gameplayDataSo.enemyPrefab.gameObject, type);
+                    AddEnemy(ai);
+
+                    await UniTask.Delay(TimeSpan.FromSeconds(enemySpawnData.spawnInterval), cancellationToken: token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log("SpawnWaveAsync cancelled.");
             }
         }
+
 
         private Vector3 GetValidSpawnPosition()
         {
@@ -82,6 +120,9 @@ namespace DEVELOPER.Scripts.Managers
             {
                 Vector3 randomDirection = Random.insideUnitSphere * enemySpawnData.spawnRadius;
                 randomDirection.y = 0f;
+
+                if (_target == null) break;
+
                 Vector3 candidatePosition = _target.position + randomDirection;
 
                 if (Vector3.Distance(candidatePosition, _target.position) < enemySpawnData.minDistanceFromPlayer)
@@ -91,7 +132,7 @@ namespace DEVELOPER.Scripts.Managers
                     return hit.position;
             }
 
-            return Vector3.zero;
+            return new Vector3(-10, 0, 5);
         }
 
         public List<EnemyAI> GetSpawnedEnemies() => _spawnedEnemies;

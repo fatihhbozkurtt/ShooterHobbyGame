@@ -76,8 +76,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ccb04527604f608c6315682f6d0e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData: {fileID: 0}
   firePoint: {fileID: 8942081583742203794}
+  weaponDataSo: {fileID: 0}
 --- !u!1 &7314735823916049581
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 7010335175645781786}
   - component: {fileID: 5800331759153307630}
   - component: {fileID: 5759841158207841772}
+  - component: {fileID: 37181515845097252}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -162,3 +163,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &37181515845097252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7314735823916049581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dda29f9c64ba4eae867d8f8027b25b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flickerDuration: 3
+  flickerInterval: 0.15
+  meshRenderer: {fileID: 0}

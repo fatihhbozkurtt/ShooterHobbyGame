@@ -1,4 +1,5 @@
 using System;
+using DEVELOPER.Scripts.Managers;
 using EssentialManagers.Scripts.SO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,6 +13,7 @@ namespace EssentialManagers.Scripts.Managers
         public event Action LevelSuccessEvent; // fired only on success
         public event Action LevelFailedEvent; // fired only on fail
         public event Action LevelAboutToChangeEvent; // fired just before next level load
+        public event Action<LevelData> LevelInstantiatedEvent;
 
         public static readonly string lastPlayedStageKey = "n_lastPlayedStage";
         public static readonly string randomizeStagesKey = "n_randomizeStages";
@@ -21,7 +23,8 @@ namespace EssentialManagers.Scripts.Managers
         [HideInInspector] public bool isLevelSuccessful;
 
         [Header("Debug")] [SerializeField] private LevelDataSO levelDataSo;
-    
+        private LevelData generalLevelData;
+
         protected override void Awake()
         {
             base.Awake();
@@ -34,13 +37,24 @@ namespace EssentialManagers.Scripts.Managers
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
         }
 
+        private void Start()
+        { 
+            TimerManager.instance.OnTimerEnd += OnTimerEnd;
+        }
+
+        private void OnTimerEnd()
+        {
+            EndGame(true);
+        }
+
         private void LoadLevelDataList()
         {
             levelDataSo = Resources.Load<LevelDataSO>("LevelData");
 
             if (levelDataSo == null)
             {
-                Debug.LogError("Failed to load LevelDataSO! Make sure it's in the Resources folder and named correctly.");
+                Debug.LogError(
+                    "Failed to load LevelDataSO! Make sure it's in the Resources folder and named correctly.");
                 return;
             }
 
@@ -49,11 +63,18 @@ namespace EssentialManagers.Scripts.Managers
             InstantiateLevel(GetTotalStagePlayed());
         }
 
+        public LevelData GetGeneralLevelData() => generalLevelData;
+
+
         private void InstantiateLevel(int targetIndex)
         {
-            GameObject levelPrefab = levelDataSo.levelData[targetIndex].LevelPrefab;
+            generalLevelData = levelDataSo.levelData[targetIndex];
+            GameObject levelPrefab = generalLevelData.LevelPrefab;
             Instantiate(levelPrefab);
 
+            isLevelActive = true;
+            LevelInstantiatedEvent?.Invoke(generalLevelData);
+        
             Debug.LogWarning("LevelPrefab Instantiated: " + levelPrefab.name);
         }
 
@@ -106,7 +127,7 @@ namespace EssentialManagers.Scripts.Managers
             PlayerPrefs.SetInt(lastPlayedStageKey, nextLevelIndex);
             LevelAboutToChangeEvent?.Invoke();
         }
-    
+
         public void PreviousLevel()
         {
             //Analytics.LevelPassed(PlayerPrefs.GetInt(cumulativeStagePlayedKey));

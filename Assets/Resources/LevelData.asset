@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelData:
   - LevelPrefab: {fileID: 3972724674587053263, guid: 28cab7ff19506344581b818b5d2cbd83, type: 3}
-    EarningMoney: 150
+    EarningMoney: 100
+    Time: 60
     Difficulty: 0
-  - LevelPrefab: {fileID: 3972724674587053263, guid: 28cab7ff19506344581b818b5d2cbd83, type: 3}
-    EarningMoney: 150
-    Difficulty: 0
-  - LevelPrefab: {fileID: 3972724674587053263, guid: 28cab7ff19506344581b818b5d2cbd83, type: 3}
-    EarningMoney: 150
-    Difficulty: 0
-  - LevelPrefab: {fileID: 3972724674587053263, guid: 28cab7ff19506344581b818b5d2cbd83, type: 3}
-    EarningMoney: 150
-    Difficulty: 0
-  - LevelPrefab: {fileID: 3972724674587053263, guid: 28cab7ff19506344581b818b5d2cbd83, type: 3}
-    EarningMoney: 150
-    Difficulty: 0
+    GameplayData: {fileID: 11400000, guid: b795cc87ac40da642a0a68ad71f5f9bf, type: 2}
+  - LevelPrefab: {fileID: 3972724674587053263, guid: 7b1fdf93816d22e42ac2e05b82cd2ff7, type: 3}
+    EarningMoney: 200
+    Time: 90
+    Difficulty: 1
+    GameplayData: {fileID: 11400000, guid: 94dba03d61ad0b44f9ca689fe4512b7f, type: 2}
+  - LevelPrefab: {fileID: 3972724674587053263, guid: c72346853a9640843b897c5b2e808f41, type: 3}
+    EarningMoney: 300
+    Time: 120
+    Difficulty: 2
+    GameplayData: {fileID: 11400000, guid: 705bb3fac011a114293431444ece5d0f, type: 2}

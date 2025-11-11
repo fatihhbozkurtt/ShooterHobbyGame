@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66a550018cb046dda6315fb42bca7955, type: 3}
-  m_Name: WeaponData_01
+  m_Name: WeaponData_02
   m_EditorClassIdentifier: 
-  weaponName: 
+  weaponName: AK47
   bulletPrefab: {fileID: 2430943188299644367, guid: 4718360b2d4c629418805c73c3a00d94, type: 3}
-  damage: 1
-  fireRate: 0.2
-  reloadTime: 1.5
+  damage: 2
+  fireRate: 0.3
+  reloadTime: 2
   bulletSpeed: 20
-  magazineSize: 10
+  magazineSize: 7

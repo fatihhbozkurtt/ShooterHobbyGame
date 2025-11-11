@@ -18,6 +18,7 @@ public class LevelData
     public int EarningMoney;
     public int Time;
     public LevelDifficulty Difficulty;
+    public GameplayDataSO GameplayData;
 
     public enum LevelDifficulty
     {

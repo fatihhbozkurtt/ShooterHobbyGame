@@ -103,6 +103,8 @@ namespace DEVELOPER.Scripts.Managers
             }
 
             obj.SetActive(true);
+            obj.transform.SetParent(null);
+            obj.transform.position = Vector3.one * .6f;
 
             if (obj.TryGetComponent<IPoolable>(out var poolable))
             {
@@ -128,6 +130,7 @@ namespace DEVELOPER.Scripts.Managers
 
             obj.SetActive(false);
             obj.transform.SetParent(transform);
+            obj.transform.localPosition = Vector3.zero;
             poolDict[prefab].Enqueue(obj);
         }
     }

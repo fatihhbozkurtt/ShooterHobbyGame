@@ -10,20 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8b9262988534e399cdc9511f6f0ac7e, type: 3}
-  m_Name: GameplayDataSO_01
+  m_Name: GameplayDataSO_02
   m_EditorClassIdentifier: 
-  levelIndex: 0
-  levelName: First
-  levelDuration: 180
   playerPrefab: {fileID: 4219059939841724718, guid: 06f86f07dcc632544a544b1aa75273ce, type: 3}
   enemyPrefab: {fileID: -9183156150466002242, guid: e3ab596a719dd4e44b6c2e6102d7ea6d, type: 3}
   bulletPrefab: {fileID: 1977621932109101789, guid: 4718360b2d4c629418805c73c3a00d94, type: 3}
-  defaultWeapon: {fileID: 11400000, guid: b3d2a527a5793964788c1a1013ef2ec1, type: 2}
-  availableWeapons: []
-  enemySpawnConfig: {fileID: 11400000, guid: 4199067bf3208e44d9be162ac28577ab, type: 2}
-  playerStats: {fileID: 11400000, guid: b8fe6ffaf93cd5b42860cf4056302299, type: 2}
-  skyboxMaterial: {fileID: 0}
-  environmentProps: []
-  maxEnemyCount: 0
-  enablePowerups: 0
-  globalGravity: -9.81
+  EnemySpawnConfig: {fileID: 11400000, guid: 48575336a95e38d46bcf25b7810e74f6, type: 2}
+  PlayerStats: {fileID: 11400000, guid: b8fe6ffaf93cd5b42860cf4056302299, type: 2}
+  WeaponData: {fileID: 11400000, guid: 199368d2cace85e4193d6360364bac29, type: 2}
+  EnemyStats: {fileID: 11400000, guid: a51c483fd7eddcb4e81b48d9f805312f, type: 2}

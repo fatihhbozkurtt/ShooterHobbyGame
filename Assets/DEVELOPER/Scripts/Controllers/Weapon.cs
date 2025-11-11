@@ -63,13 +63,17 @@ namespace DEVELOPER.Scripts.Controllers
         private void Fire()
         {
             GameObject bullet = ObjectPoolManager.instance.GetFromPool(weaponDataSo.bulletPrefab, null);
-            bullet.transform.position = firePoint.position;
-            bullet.transform.rotation = firePoint.rotation;
 
-            Bullet bulletScript = bullet.GetComponent<Bullet>();
-            bulletScript.Initialize(weaponDataSo.damage, weaponDataSo.bulletSpeed);
+            if (bullet != null)
+            {
+                bullet.transform.position = firePoint.position;
+                bullet.transform.rotation = firePoint.rotation;
 
-            currentAmmo--;
+                Bullet bulletScript = bullet.GetComponent<Bullet>();
+                bulletScript.Initialize(weaponDataSo.damage, weaponDataSo.bulletSpeed);
+
+                currentAmmo--;
+            }
         }
 
         private async UniTask ReloadAsync()

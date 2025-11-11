@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b9af29a821b422ca615e9fb3369409f, type: 3}
-  m_Name: EnemySpawnConfigSO_01
+  m_Name: EnemySpawnConfigSO_02
   m_EditorClassIdentifier: 
-  enemiesPerWave: 5
-  spawnInterval: 1
-  waveInterval: 10
+  enemiesPerWave: 15
+  spawnInterval: 0.75
+  waveInterval: 4
   spawnRadius: 15
   minDistanceFromPlayer: 5
   maxNavMeshSampleAttempts: 10
   enableScaling: 1
-  maxEnemyCount: 50
+  maxEnemyCount: 70
   difficultyCurve:
     serializedVersion: 2
     m_Curve:

@@ -1,23 +1,27 @@
+using System;
 using DEVELOPER.Scripts.Data;
 using DEVELOPER.Scripts.Managers;
+using EssentialManagers.Scripts.Managers;
 using UnityEngine;
 
 namespace DEVELOPER.Scripts.Controllers
 {
     public class Bullet : MonoBehaviour, IPoolable
     {
+        [Header("Debug")] [SerializeField] private int damage;
         private GameObject _prefabRef;
-        private int _damage;
         private float _speed;
         private Vector3 _direction;
         private float _lifetime;
+        LevelData _levelData;
 
 
-        public void Initialize(int damage, float speed)
+        public void Initialize(int dmg, float speed)
         {
-            _prefabRef = DataExtensions.GetGameplayData().bulletPrefab.gameObject;
-            _damage = damage;
-            _speed = speed; 
+            _levelData = GameManager.instance.GetGeneralLevelData();
+            _prefabRef = _levelData.GameplayData.bulletPrefab.gameObject;
+            damage = dmg;
+            _speed = speed;
 
             Transform target = transform.position.GetClosestEnemy(EnemySpawner.instance.GetSpawnedEnemies());
             _direction = target != null
@@ -25,6 +29,17 @@ namespace DEVELOPER.Scripts.Controllers
                 : transform.forward;
 
             _lifetime = 0f;
+        }
+
+        private void Start()
+        {
+            GameManager.instance.LevelEndedEvent += OnLevelEnded;
+        }
+
+        private void OnLevelEnded()
+        {
+            GameManager.instance.LevelEndedEvent -= OnLevelEnded;
+            Destroy(gameObject);
         }
 
         private void Update()
@@ -43,9 +58,10 @@ namespace DEVELOPER.Scripts.Controllers
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent<IDamageable>(out var damageable))
+            if (other.TryGetComponent<EnemyAI>(out var enemy))
             {
-                damageable.TakeDamage(_damage);
+                IDamageable damageable = enemy.GetComponent<IDamageable>();
+                damageable.TakeDamage(damage);
                 ObjectPoolManager.instance.ReturnToPool(_prefabRef, gameObject);
             }
         }

@@ -20,9 +20,14 @@ namespace EssentialManagers.Scripts.Managers
         public CanvasGroup successCanvasGroup;
         public CanvasGroup failCanvasGroup;
 
-        [Header("Standard Objects")] public Image screenFader;
-        public TextMeshProUGUI levelText;
+        [Header("References")] public Image screenFader;
+        [SerializeField] TextMeshProUGUI levelText;
         [SerializeField] DynamicJoystick dynamicJoystick;
+        [SerializeField] private TextMeshProUGUI killText;
+        [SerializeField] private TextMeshProUGUI successText;
+        [SerializeField] private TextMeshProUGUI failText;
+        private int _killCount;
+
 
         CanvasGroup[] canvasArray;
 
@@ -65,9 +70,26 @@ namespace EssentialManagers.Scripts.Managers
 
             GameManager.instance.LevelStartedEvent += (() => ShowPanel(PanelType.Game));
 
-            GameManager.instance.LevelSuccessEvent += (() => ShowPanel(PanelType.Success));
-            GameManager.instance.LevelFailedEvent += (() => ShowPanel(PanelType.Fail));
+            GameManager.instance.LevelSuccessEvent += (() =>
+            {
+                ShowPanel(PanelType.Success);
+                successText.text = "TOTAL KILLED: " + GetKillCount();
+            });
+            GameManager.instance.LevelFailedEvent += (() =>
+            {
+                ShowPanel(PanelType.Fail);
+                failText.text = "TOTAL KILLED: " + GetKillCount();
+                
+            });
             GameManager.instance.LevelAboutToChangeEvent += OnLevelAboutToChangeEvent;
+            GameManager.instance.LevelInstantiatedEvent += _ =>
+            {
+                levelText.text = "LEVEL " + GameManager.instance.GetTotalStagePlayed();
+                _killCount = 0;
+                killText.text = "KILL: " + _killCount;
+            };
+
+            return;
 
             void OnLevelAboutToChangeEvent()
             {
@@ -75,6 +97,15 @@ namespace EssentialManagers.Scripts.Managers
                 ShowPanel(PanelType.Game);
             }
         }
+
+        public void RegisterKill()
+        {
+            _killCount++;
+            killText.text = "KILL: " + _killCount;
+        }
+
+        public int GetKillCount() => _killCount;
+
 
         public void ShowPanel(PanelType panelId)
         {
@@ -95,6 +126,7 @@ namespace EssentialManagers.Scripts.Managers
         }
 
         public DynamicJoystick GetDynamicJoystick() => dynamicJoystick;
+
         #region ButtonEvents
 
         public void OnTapRestart()

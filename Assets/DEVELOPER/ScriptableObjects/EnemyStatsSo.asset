@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fcb31f9f00440918de9d16fd8d6daeb, type: 3}
+  m_Name: EnemyStatsSo
+  m_EditorClassIdentifier: 
+  EnemyStarterInfoList:
+  - Type: 1
+    Name: Rookie_Lucky
+    MaxHealth: 3
+    Material: {fileID: 2100000, guid: 9b096b19e9ad9844f9e136cea8f72233, type: 2}
+  - Type: 2
+    Name: Mid_Berserker
+    MaxHealth: 5
+    Material: {fileID: 2100000, guid: a8dce29e9acdddf43a0960f4ff97050b, type: 2}
+  - Type: 3
+    Name: Expert_Survivor
+    MaxHealth: 10
+    Material: {fileID: 2100000, guid: ff9c7819d70731e42ba43fba3a3ae524, type: 2}

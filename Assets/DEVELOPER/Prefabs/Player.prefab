@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7552982073787987766}
   - component: {fileID: 6781086783747271538}
   - component: {fileID: 7802134138755160592}
-  - component: {fileID: 7131550188906282378}
+  - component: {fileID: 733410788292693694}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -84,29 +84,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &7131550188906282378
-CapsuleCollider:
+--- !u!114 &733410788292693694
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1373138600131679684}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dda29f9c64ba4eae867d8f8027b25b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flickerDuration: 3
+  flickerInterval: 0.15
+  meshRenderers: []
 --- !u!1 &2430943188299644367
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,9 +109,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1114945656749854022}
   - component: {fileID: 2630466748210636232}
+  - component: {fileID: 4642615732915210631}
+  - component: {fileID: 2220630524681202755}
+  - component: {fileID: 4219059939841724718}
   - component: {fileID: 6883175567407796158}
   - component: {fileID: 69786185785986330}
-  - component: {fileID: 4219059939841724718}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -166,6 +160,69 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!54 &4642615732915210631
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2430943188299644367}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!136 &2220630524681202755
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2430943188299644367}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4219059939841724718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2430943188299644367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb37fd574cd3e64abbfe272cb8b6123, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 0}
 --- !u!114 &6883175567407796158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,21 +249,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 151f472420f74275b35288cb3d597a4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  invincibilityDuration: 3
   currentHealth: 0
   maxHealth: 0
---- !u!114 &4219059939841724718
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2430943188299644367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb37fd574cd3e64abbfe272cb8b6123, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stats: {fileID: 0}
+  contactDamage: 10
+  isInvincible: 0
 --- !u!1001 &7628314203133684067
 PrefabInstance:
   m_ObjectHideFlags: 0

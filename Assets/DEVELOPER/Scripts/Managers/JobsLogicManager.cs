@@ -11,7 +11,7 @@ namespace DEVELOPER.Scripts.Managers
     public class JobsLogicManager : MonoSingleton<JobsLogicManager>
     {
         private readonly List<EnemyAI> activeEnemies = new();
-        
+
         public void Register(EnemyAI enemy)
         {
             if (!activeEnemies.Contains(enemy))
@@ -26,6 +26,7 @@ namespace DEVELOPER.Scripts.Managers
 
         private void Update()
         {
+            if (!GameManager.instance.isLevelActive) return;
             if (activeEnemies.Count == 0) return;
 
             NativeArray<EnemyNavmeshData> inputData = new(activeEnemies.Count, Allocator.TempJob);
