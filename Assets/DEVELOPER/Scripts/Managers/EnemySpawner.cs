@@ -21,8 +21,7 @@ namespace DEVELOPER.Scripts.Managers
         private CancellationTokenSource waveCTS;
         private Transform _target;
         private List<EnemyAI> _spawnedEnemies = new();
-        LevelData _levelData;
-
+        private LevelData _levelData;
 
         private void Start()
         {
@@ -47,6 +46,7 @@ namespace DEVELOPER.Scripts.Managers
             waveCTS?.Cancel();
             waveCTS?.Dispose();
             waveCTS = null;
+            _target = null; // hedefi sıfırla
         }
 
         private async UniTaskVoid StartWaveLoopAsync(CancellationToken token)
@@ -73,7 +73,6 @@ namespace DEVELOPER.Scripts.Managers
             }
         }
 
-
         private async UniTask SpawnWaveAsync(CancellationToken token)
         {
             try
@@ -84,7 +83,8 @@ namespace DEVELOPER.Scripts.Managers
 
                     if (_target == null)
                     {
-                        Debug.LogWarning("SpawnWaveAsync aborted mid-loop: target is null.");
+                        // hedef null ise iptal fırlat
+                        token.ThrowIfCancellationRequested();
                         return;
                     }
 
@@ -112,7 +112,6 @@ namespace DEVELOPER.Scripts.Managers
                 Debug.Log("SpawnWaveAsync cancelled.");
             }
         }
-
 
         private Vector3 GetValidSpawnPosition()
         {

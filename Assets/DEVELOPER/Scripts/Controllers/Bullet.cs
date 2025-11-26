@@ -39,7 +39,7 @@ namespace DEVELOPER.Scripts.Controllers
         private void OnLevelEnded()
         {
             GameManager.instance.LevelEndedEvent -= OnLevelEnded;
-            Destroy(gameObject);
+            ObjectPoolManager.instance.ReturnToPool(_prefabRef, gameObject);
         }
 
         private void Update()

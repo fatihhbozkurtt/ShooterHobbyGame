@@ -17,6 +17,7 @@ namespace DEVELOPER.Scripts.Controllers
         private int currentAmmo;
         private bool isFiring;
         private bool isReloading;
+        private bool isFireLoopRunning;
 
         private InputManager _inputManager;
 
@@ -32,7 +33,7 @@ namespace DEVELOPER.Scripts.Controllers
             if (_inputManager.IsFiring && !isFiring && !isReloading)
             {
                 isFiring = true;
-                FireLoopAsync().Forget();
+                StartFireLoopAsync().Forget();
             }
 
             if (!_inputManager.IsFiring && isFiring)
@@ -41,7 +42,16 @@ namespace DEVELOPER.Scripts.Controllers
             }
         }
 
-        private async UniTaskVoid FireLoopAsync()
+        private async UniTaskVoid StartFireLoopAsync()
+        {
+            if (isFireLoopRunning) return;
+
+            isFireLoopRunning = true;
+            await FireLoopAsync();
+            isFireLoopRunning = false;
+        }
+
+        private async UniTask FireLoopAsync()
         {
             while (isFiring)
             {
